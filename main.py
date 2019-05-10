@@ -2,7 +2,7 @@ import datetime
 import json
 import threading
 import time
-import winsound
+# import winsound
 from subprocess import Popen
 
 from src import constants as enums
@@ -25,8 +25,8 @@ def run(timer: int = 5, sound: bool = False):
         if kill_threads:
             print('function was terminated')
             break
-        if sound:
-            beep()
+        # if sound:
+            # beep()
             for item in watch_list:
                 inst: Instrument = Instrument(
                     enums.Providers[item['provider']],
@@ -34,14 +34,14 @@ def run(timer: int = 5, sound: bool = False):
                     enums.Intervals[item['interval']]
                 )
                 last_request_done = ds.update_instrument(inst)
-        if sound:
-            beep(250)
+        # if sound:
+            # beep(250)
 
 
-def beep(duration: int=100):
-    frequency = 2500  # Set Frequency To 2500 Hertz
-    duration = duration  # Set Duration To 1000 ms == 1 second
-    winsound.Beep(frequency, duration)
+# def beep(duration: int=100):
+#     frequency = 2500  # Set Frequency To 2500 Hertz
+#     duration = duration  # Set Duration To 1000 ms == 1 second
+#     winsound.Beep(frequency, duration)
 
 def start():
     global kill_threads
