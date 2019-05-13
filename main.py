@@ -1,3 +1,4 @@
+import sys
 import datetime
 import json
 import threading
@@ -18,15 +19,17 @@ ds: DataService = DataService()
 
 kill_threads = False
 
-def run(timer: int = 5, sound: bool = False):
+def run(speed: int, sound: bool = False):
+    print('Running...')
     while True:
-        time.sleep(timer)
+        time.sleep(speed)
         global kill_threads
         if kill_threads:
             print('function was terminated')
             break
         # if sound:
             # beep()
+        try:
             for item in watch_list:
                 inst: Instrument = Instrument(
                     enums.Providers[item['provider']],
@@ -34,8 +37,10 @@ def run(timer: int = 5, sound: bool = False):
                     enums.Intervals[item['interval']]
                 )
                 last_request_done = ds.update_instrument(inst)
-        # if sound:
-            # beep(250)
+            # if sound:
+                # beep(250)
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
 
 
 # def beep(duration: int=100):
@@ -43,10 +48,11 @@ def run(timer: int = 5, sound: bool = False):
 #     duration = duration  # Set Duration To 1000 ms == 1 second
 #     winsound.Beep(frequency, duration)
 
-def start():
+def start(speed: int=5):
+    print('Starting with {0} second intervals'.format(speed))
     global kill_threads
     kill_threads = False
-    run_thread = threading.Thread(target=run, args=(1,))
+    run_thread = threading.Thread(target=run, args=(speed,))
     run_thread.start()
 
 def stop():

@@ -11,7 +11,7 @@ from src import constants as enums
 
 class DB():
     def __init__(self, root_path):
-        self.data_path = root_path + '/Data'
+        self.data_path = root_path + '/data'
         self.conn = sqlite3.connect(self.data_path + '/manage.db')
         self.c = self.conn.cursor()
 

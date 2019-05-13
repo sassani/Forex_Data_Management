@@ -10,35 +10,35 @@ ROOT = os.getcwd()
 
 class LocalService:
     def __init__(self):
-        self.data_path = ROOT + '/Data'
+        self.data_path = ROOT + '/data'
         self.conn = sqlite3.connect(self.data_path + '/manage.db')
         self.c = self.conn.cursor()
 
     def get_last_date(self, file_name: str):
         try:
-            t = (file_name,)
-            query = 'SELECT lastUpdateAt, unixTime FROM files WHERE name =?'
-            self.c.execute(query, t)
+            query = 'SELECT lastUpdateAt, unixTime FROM files WHERE name = "{0}"'.format(file_name)
+            self.c.execute(query)
             record = self.c.fetchone()
             if record:
                 return (record[0], record[1])
             else:
                 return (None, None)
-        except:
-            print('GET LAST DATE ERROR')
+        except sqlite3.Error as e:
+            print("An error occurred in GET LAST DATE:", e.args[0])
 
     def _set_last_date(self, file_name: str, last_date: int):
         try:
-            query = 'UPDATE files SET lastUpdateAt ="' + \
-                str(datetime.datetime.now()) + \
-                '" , dateTime ="' + str(datetime.datetime.fromtimestamp(last_date)) + \
-                '" , unixTime =' + str(last_date) + \
-                ' WHERE name = "' +  file_name + '"'
+            query = 'UPDATE files SET lastUpdateAt = "{0}", dateTime = "{1}", unixTime = {2} WHERE name = "{3}"'.format(
+                str(datetime.datetime.now()),
+                str(datetime.datetime.fromtimestamp(last_date)),
+                str(last_date),
+                file_name
+	        )
             self.c.execute(query)
             self.conn.commit()
             return True
-        except:
-            print('SET LAS DATE ERROR')
+        except sqlite3.Error as e:
+            print("An error occurred in SET LAST DATE:", e.args[0])
             return False
 
     def update_csv(self, file_name: str, df: pd.DataFrame):
@@ -55,7 +55,7 @@ class LocalService:
                         return True
             return False
         except:
-            print('UPDATE CSV ERROR')
+            print('An error occurred in UPDATE CSV')
             return False
 
     def _logdata(self,file: str, msg: str):
