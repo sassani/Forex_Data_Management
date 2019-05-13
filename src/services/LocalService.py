@@ -63,6 +63,7 @@ class LocalService:
             with(open(file, mode='a')) as f:
                 f.write(msg)
         except:
+            print('LOG ERROR')
             pass
 
 if __name__ == "__main__":

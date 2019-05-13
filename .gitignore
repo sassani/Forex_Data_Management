@@ -3,3 +3,4 @@
 __pycache__
 *.csv
 settings.json
+.ipynb_checkpoints
