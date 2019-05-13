@@ -15,14 +15,17 @@ class LocalService:
         self.c = self.conn.cursor()
 
     def get_last_date(self, file_name: str):
-        t = (file_name,)
-        query = 'SELECT lastUpdateAt, unixTime FROM files WHERE name =?'
-        self.c.execute(query, t)
-        record = self.c.fetchone()
-        if record:
-            return (record[0], record[1])
-        else:
-            return (None, None)
+        try:
+            t = (file_name,)
+            query = 'SELECT lastUpdateAt, unixTime FROM files WHERE name =?'
+            self.c.execute(query, t)
+            record = self.c.fetchone()
+            if record:
+                return (record[0], record[1])
+            else:
+                return (None, None)
+        except:
+            print('GET LAST DATE ERROR')
 
     def _set_last_date(self, file_name: str, last_date: int):
         try:
@@ -35,6 +38,7 @@ class LocalService:
             self.conn.commit()
             return True
         except:
+            print('SET LAS DATE ERROR')
             return False
 
     def update_csv(self, file_name: str, df: pd.DataFrame):
@@ -51,6 +55,7 @@ class LocalService:
                         return True
             return False
         except:
+            print('UPDATE CSV ERROR')
             return False
 
     def _logdata(self,file: str, msg: str):
