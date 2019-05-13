@@ -62,9 +62,14 @@ def stop():
 
 def main():
     while True:
-        command = input('command: ')
+        txt: str = input('command: ')
+        txt = txt.split()
+        command = txt[0]
         if(command == 'start'):
-            start()
+            if len(txt)==2:
+                start(int(txt[1]))
+            else:
+                start()
         elif command == 'stop':
             stop()
             time.sleep(2)
