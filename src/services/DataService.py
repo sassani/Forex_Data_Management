@@ -24,12 +24,12 @@ class DataService:
         print('Updating {0}_{1}_{2}'.format(instrument.provider.name, instrument.symbol.name, instrument.period.name))
         # find relative file
         ls: LocalService = LocalService()
-        date, unix = ls.get_last_date(instrument.file_name)
+        unix = ls.get_last_date(instrument.file_name)
 
         provider = Oanda()
         ohlcv, ohlcv_live = provider.get_ohlcv(instrument, unix)
         # save data on disk
-        ls.update_csv(instrument.file_name, ohlcv)
+        ls.update_hdf(instrument.file_name, ohlcv)
         # print('from:{0} to: {1}. count: {2}'.format(f, l, n))
 
 

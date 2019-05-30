@@ -10,21 +10,20 @@ ROOT = os.getcwd()
 
 class LocalService:
     def __init__(self):
-        self.data_path = ROOT + '/data'
-        self.conn = sqlite3.connect(self.data_path + '/manage.db')
+        self.data_path = ROOT + '\\data'
+        self.conn = sqlite3.connect(self.data_path + '\\manage.db')
         self.c = self.conn.cursor()
 
     def get_last_date(self, file_name: str):
+        target = self.data_path+'\\'+file_name+'.h5'
         try:
-            query = 'SELECT lastUpdateAt, unixTime FROM files WHERE name = "{0}"'.format(file_name)
-            self.c.execute(query)
-            record = self.c.fetchone()
-            if record:
-                return (record[0], record[1])
-            else:
-                return (None, None)
-        except sqlite3.Error as e:
-            print("An error occurred in GET LAST DATE:", e.args[0])
+            with pd.HDFStore(target) as store:
+                if len(store.keys()) >0:
+                    last_unix = int(float(store.select('data', start=-1).index[0]))
+                    return last_unix
+                return None
+        except:
+            print("An error occurred in GET LAST DATE")
 
     def _set_last_date(self, file_name: str, last_date: int):
         try:
@@ -58,6 +57,23 @@ class LocalService:
             print('An error occurred in UPDATE CSV')
             return False
 
+    def update_hdf(self, file_name: str, df: pd.DataFrame):
+        try:
+            lastUnix = int(float(df.index[-1]))
+            target = self.data_path+'\\'+file_name+'.h5'
+            with pd.HDFStore(target) as store:
+                store.put('data',df,'table',True)
+            log_txt = '{0}- {1}'.format(str(datetime.datetime.now()), file_name)
+            log_txt += ' | from:{0} to: {1}. count: {2}\n'.format(
+                int(float(df.index[0])),
+                int(float(df.index[-1])),
+                df.shape[0])
+            self._logdata(self.data_path+'/log.txt', log_txt)
+            return True
+        except:
+            print('An error occurred in UPDATE CSV\n')
+            return False
+
     def _logdata(self,file: str, msg: str):
         try:
             with(open(file, mode='a')) as f:
@@ -66,7 +82,9 @@ class LocalService:
             print('LOG ERROR')
             pass
 
+
 if __name__ == "__main__":
+    print(__name__)
     from providers.Oanda import Oanda
     from Instrument import Instrument
     sys.path.append(ROOT)
@@ -74,14 +92,14 @@ if __name__ == "__main__":
 
     inst: Instrument = Instrument(
         enums.Providers.oanda_fxp,
-        enums.ForexPairs.aud_cad,
-        enums.Intervals.Mntly
+        enums.ForexPairs.eur_aud,
+        enums.Intervals.min01
     )
     ls: LocalService = LocalService()
-    date, unix = ls.get_last_date(inst.file_name)
+    unix = ls.get_last_date(inst.file_name)
     provider = Oanda()
     print('geting %s ...' % inst.file_name)
     ohlcv, ohlcv_live = provider.get_ohlcv(inst, unix)
     print('update csv file %s ...' % inst.file_name)
-    ls.update_csv(inst.file_name, ohlcv)
+    ls.update_hdf(inst.file_name, ohlcv)
     # print('number of new record = ', n)

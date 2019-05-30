@@ -105,7 +105,7 @@ class Oanda:
             if index > fromDate:
                 if candle['complete']:
                     data[index] = [
-                        index,
+                        # index,
                         float(candle['mid']['o']),
                         float(candle['mid']['h']),
                         float(candle['mid']['l']),
@@ -123,7 +123,7 @@ class Oanda:
                     }
         ohlcv = pd.DataFrame.from_dict(data,
             orient='index',
-            columns=['date', 'open', 'high', 'low', 'close', 'volume'])
+            columns=['open', 'high', 'low', 'close', 'volume'])
         return (ohlcv, ohlcv_live)
 
 
