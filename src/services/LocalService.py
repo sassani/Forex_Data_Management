@@ -10,12 +10,12 @@ ROOT = os.getcwd()
 
 class LocalService:
     def __init__(self):
-        self.data_path = ROOT + '\\data'
-        self.conn = sqlite3.connect(self.data_path + '\\manage.db')
+        self.data_path = ROOT + '/data'
+        self.conn = sqlite3.connect(self.data_path + '/manage.db')
         self.c = self.conn.cursor()
 
     def get_last_date(self, file_name: str):
-        target = self.data_path+'\\'+file_name+'.h5'
+        target = self.data_path+'/'+file_name+'.h5'
         try:
             with pd.HDFStore(target) as store:
                 if len(store.keys()) >0:
@@ -60,7 +60,7 @@ class LocalService:
     def update_hdf(self, file_name: str, df: pd.DataFrame):
         try:
             lastUnix = int(float(df.index[-1]))
-            target = self.data_path+'\\'+file_name+'.h5'
+            target = self.data_path+'/'+file_name+'.h5'
             with pd.HDFStore(target) as store:
                 store.put('data',df,'table',True)
             log_txt = '{0}- {1}'.format(str(datetime.datetime.now()), file_name)
