@@ -7,8 +7,8 @@ import time
 from subprocess import Popen
 
 from src import constants as enums
-from src.services.DataService import DataService
-from src.services.Instrument import Instrument
+from src.services.dataService import DataService
+from src.services.instrument import Instrument
 # from src.utilities.RepeatedTimer import RepeatedTimer
 
 watch_list = json.load(open('watch_list.json'))

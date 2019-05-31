@@ -86,8 +86,8 @@ class LocalService:
 
 if __name__ == "__main__":
     print(__name__)
-    from providers.Oanda import Oanda
-    from Instrument import Instrument
+    from providers.oanda import Oanda
+    from instrument import Instrument
     sys.path.append(ROOT)
     from src import constants as enums
 

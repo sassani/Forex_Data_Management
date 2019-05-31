@@ -10,9 +10,9 @@ sys.path.append(ROOT)
 clear = lambda: os.system('cls' if os.name=='nt' else 'clear')
 
 from src import constants as enums
-from src.services.providers.Oanda import Oanda
-from src.services.Instrument import Instrument
-from src.services.LocalService import LocalService
+from src.services.providers.oanda import Oanda
+from src.services.instrument import Instrument
+from src.services.localService import LocalService
 
 
 # DATA_PATH = ROOT + '/data/'

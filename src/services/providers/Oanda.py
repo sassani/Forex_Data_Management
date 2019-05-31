@@ -8,7 +8,7 @@ import numpy as np
 ROOT = os.getcwd()
 sys.path.append(ROOT)
 
-from src.services.Instrument import Instrument
+from src.services.instrument import Instrument
 
 INTERVALS_MAP = {
 	'sec05': 'S5',
