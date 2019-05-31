@@ -58,21 +58,22 @@ class LocalService:
             return False
 
     def update_hdf(self, file_name: str, df: pd.DataFrame):
-        try:
-            lastUnix = int(float(df.index[-1]))
-            target = self.data_path+'/'+file_name+'.h5'
-            with pd.HDFStore(target) as store:
-                store.put('data',df,'table',True)
-            log_txt = '{0}- {1}'.format(str(datetime.datetime.now()), file_name)
-            log_txt += ' | from:{0} to: {1}. count: {2}\n'.format(
-                int(float(df.index[0])),
-                int(float(df.index[-1])),
-                df.shape[0])
-            self._logdata(self.data_path+'/log.txt', log_txt)
-            return True
-        except:
-            print('An error occurred in UPDATE CSV\n')
-            return False
+        if df.shape[0]>0:
+            try:
+                lastUnix = int(float(df.index[-1]))
+                target = self.data_path+'/'+file_name+'.h5'
+                with pd.HDFStore(target) as store:
+                    store.put('data',df,'table',True)
+                log_txt = '{0}- {1}'.format(str(datetime.datetime.now()), file_name)
+                log_txt += ' | from:{0} to: {1}. count: {2}\n'.format(
+                    int(float(df.index[0])),
+                    int(float(df.index[-1])),
+                    df.shape[0])
+                self._logdata(self.data_path+'/log.txt', log_txt)
+                return True
+            except:
+                print('An error occurred in UPDATE HDF\n')
+        return False
 
     def _logdata(self,file: str, msg: str):
         try:
@@ -92,7 +93,7 @@ if __name__ == "__main__":
 
     inst: Instrument = Instrument(
         enums.Providers.oanda_fxp,
-        enums.ForexPairs.eur_aud,
+        enums.ForexPairs.eur_usd,
         enums.Intervals.min01
     )
     ls: LocalService = LocalService()

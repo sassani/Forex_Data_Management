@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 ROOT = os.getcwd()
 sys.path.append(ROOT)
+clear = lambda: os.system('cls' if os.name=='nt' else 'clear')
 
 from src import constants as enums
 from src.services.providers.Oanda import Oanda
@@ -21,11 +22,13 @@ class DataService:
         pass
 
     def update_instrument(self, instrument: Instrument):
+        clear()
+        print('Updating...')
         print('Updating {0}_{1}_{2}'.format(instrument.provider.name, instrument.symbol.name, instrument.period.name))
         # find relative file
         ls: LocalService = LocalService()
         unix = ls.get_last_date(instrument.file_name)
-
+        print('Last Unix:\t{0}'.format(unix))
         provider = Oanda()
         ohlcv, ohlcv_live = provider.get_ohlcv(instrument, unix)
         # save data on disk
