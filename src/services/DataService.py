@@ -31,6 +31,7 @@ class DataService:
         print('Last Unix:\t{0}'.format(unix))
         provider = Oanda()
         ohlcv, ohlcv_live = provider.get_ohlcv(instrument, unix)
+        print('Current price:\t{0}'.format(ohlcv_live))
         # save data on disk
         ls.update_hdf(instrument.file_name, ohlcv)
         # print('from:{0} to: {1}. count: {2}'.format(f, l, n))
