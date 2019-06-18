@@ -11,13 +11,19 @@ from src.services.dataService import DataService
 from src.services.instrument import Instrument
 # from src.utilities.RepeatedTimer import RepeatedTimer
 
+from gui import main_form as Gui
+
 watch_list = json.load(open('watch_list.json'))
 watch_list = watch_list['items']
+
+
 
 
 ds: DataService = DataService()
 
 kill_threads = False
+
+
 
 def run(speed: int, sound: bool = False):
     print('Running...')
