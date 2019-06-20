@@ -1,3 +1,7 @@
+import pandas as pd
+import numpy as np
+from scipy.signal import argrelextrema
+
 def SMA(df, column="close", period=20):
 
     sma = df[column].rolling(window=period).mean()
@@ -38,3 +42,17 @@ def BollingerBand(df, column="close", period=20):
     upper = (sma + (std * 2)).to_frame('BBANDUP{0}'.format(str(period)))
     lower = (sma - (std * 2)).to_frame('BBANDLO{0}'.format(str(period)))
     return df.join(upper).join(lower)
+
+def ActionPoint(df, column='close', period=21):
+    ilocs_min = argrelextrema(df.close.values, np.less_equal, order=period)[0]
+    ilocs_max = argrelextrema(df.close.values, np.greater_equal, order=period)[0]
+
+    df['ActionPoint'] = 0
+    df.loc[df.iloc[ilocs_min].index, 'ActionPoint'] = 1
+    df.loc[df.iloc[ilocs_max].index, 'ActionPoint'] = -1
+
+    # df['weekly_max'] = False
+    # df['weekly_min'] = False
+    # df.loc[df.iloc[ilocs_min].index, 'weekly_min'] = True
+    # df.loc[df.iloc[ilocs_max].index, 'weekly_max'] = True
+    return df
