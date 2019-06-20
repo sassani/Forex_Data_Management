@@ -47,12 +47,9 @@ def ActionPoint(df, column='close', period=21):
     ilocs_min = argrelextrema(df.close.values, np.less_equal, order=period)[0]
     ilocs_max = argrelextrema(df.close.values, np.greater_equal, order=period)[0]
 
-    df['ActionPoint'] = 0
-    df.loc[df.iloc[ilocs_min].index, 'ActionPoint'] = 1
-    df.loc[df.iloc[ilocs_max].index, 'ActionPoint'] = -1
-
-    # df['weekly_max'] = False
-    # df['weekly_min'] = False
-    # df.loc[df.iloc[ilocs_min].index, 'weekly_min'] = True
-    # df.loc[df.iloc[ilocs_max].index, 'weekly_max'] = True
+    df['sell'] = False
+    df['buy'] = False
+    df.loc[df.iloc[ilocs_min].index, 'buy'] = True
+    df.loc[df.iloc[ilocs_max].index, 'sell'] = True
+    
     return df
