@@ -4,8 +4,9 @@ from scipy.signal import argrelextrema
 
 def SMA(df, column="close", period=20):
 
-    sma = df[column].rolling(window=period).mean()
-    return df.join(sma.to_frame('SMA{0}'.format(str(period))))
+    # sma = df[column].rolling(window=period).mean()
+    return df[column].rolling(window=period).mean()
+    # return df.join(sma.to_frame('SMA{0}'.format(str(period))))
 
 
 
@@ -28,9 +29,10 @@ def RSI(df, column="close", period=14):
     rUp = up.ewm(com=period - 1,  adjust=False).mean()
     rDown = down.ewm(com=period - 1, adjust=False).mean().abs()
 
-    rsi = 100 - 100 / (1 + rUp / rDown)    
+    # rsi = 100 - 100 / (1 + rUp / rDown)    
 
-    return df.join(rsi.to_frame('RSI{0}'.format(str(period))))
+    return 100 - 100 / (1 + rUp / rDown)    
+    # return df.join(rsi.to_frame('RSI{0}'.format(str(period))))
 
 
 

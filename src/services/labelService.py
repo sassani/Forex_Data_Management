@@ -25,26 +25,19 @@ class LabelService(object):
             with pd.HDFStore(data_raw) as raw_store:
                 # print(raw_store['data'])
                 df = pd.read_hdf(raw_store, key='data')
-                # df = indicators.SMA(df,period=3)
-                # df = indicators.SMA(df,period=5)
-                # df = indicators.SMA(df,period=7)
-                # df = indicators.SMA(df,period=10)
-                # df = indicators.SMA(df,period=15)
-                # df = indicators.RSI(df,period=3)
-                # df = indicators.RSI(df,period=5)
-                # df = indicators.RSI(df,period=7)
-                df = indicators.RSI(df,period=10)
-                df = indicators.RSI(df,period=15)
-                # df = df.join(
-                #     sma3.to_frame('SMA3'),
-                #     sma5.to_frame('SMA5'),
-                #     sma7.to_frame('SMA7'),
-                #     sma10.to_frame('SMA10'),
-                #     sma15.to_frame('SMA15'),
-                #     )
+                sma3 = indicators.SMA(df,period=3)
+                sma30 = indicators.SMA(df,period=30)
+                rsi3 = indicators.RSI(df,period=3)
+                rsi30 = indicators.RSI(df,period=30)
+                df = df.join(
+                    sma3.to_frame('SMA3'),
+                    sma30.to_frame('SMA30'),
+                    rsi3.to_frame('RSI3'),
+                    rsi30.to_frame('RSI30')
+                    )
                 print(df)
         except Exception as e:
-            print("An error occurred in GET LAST DATE")
+            print("An error occurred in UPDATE LABEL ({0})".format(e))
 
         try:
             with pd.HDFStore(data_labeled) as store:
