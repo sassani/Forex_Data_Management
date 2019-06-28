@@ -12,8 +12,9 @@ def SMA(df, column="close", period=20):
 
 def EMA(df, column="close", period=20):
 
-    ema = df[column].ewm(span=period).mean()
-    return df.join(ema.to_frame('EMA{0}'.format(str(period))))
+    # ema = df[column].ewm(span=period).mean()
+    return df[column].ewm(span=period).mean()
+    # return df.join(ema.to_frame('EMA{0}'.format(str(period))))
 
 
 
@@ -45,13 +46,16 @@ def BollingerBand(df, column="close", period=20):
     lower = (sma - (std * 2)).to_frame('BBANDLO{0}'.format(str(period)))
     return df.join(upper).join(lower)
 
-def ActionPoint(df, column='close', period=21):
+def MaxMinPoint(df, column='close', period=21):
     ilocs_min = argrelextrema(df.close.values, np.less_equal, order=period)[0]
     ilocs_max = argrelextrema(df.close.values, np.greater_equal, order=period)[0]
 
-    df['sell'] = False
-    df['buy'] = False
-    df.loc[df.iloc[ilocs_min].index, 'buy'] = True
-    df.loc[df.iloc[ilocs_max].index, 'sell'] = True
+    df['sell'] = 0
+    df['buy'] = 0
+    df['don'] = 1
+    df.loc[df.iloc[ilocs_min].index, 'buy'] = 1
+    df.loc[df.iloc[ilocs_max].index, 'sell'] = 1
+    df.loc[df.iloc[ilocs_min].index, 'don'] = 0
+    df.loc[df.iloc[ilocs_max].index, 'don'] = 0
     
     return df
