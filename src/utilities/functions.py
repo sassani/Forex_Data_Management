@@ -6,7 +6,7 @@ class MinMaxScale():
     def __init__(self, df:pd.DataFrame):
         self.mins = df.min()
         self.maxs = df.max()
-        self.delta = maxs - mins
+        self.delta = self.maxs - self.mins
 
     def normalize(self, df: pd.DataFrame):
         return (df - self.mins)/self.delta
