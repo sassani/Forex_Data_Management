@@ -48,15 +48,16 @@ def BollingerBand(df, column="close", period=20):
 
 def Extremum(df, column='close', period=21):
     '''Return extremum points of column in the middle of the period'''
-    ilocs_min = argrelextrema(df[column].values, np.less_equal, order=period)[0]
-    ilocs_max = argrelextrema(df[column].values, np.greater_equal, order=period)[0]
+    _df = df.copy()
+    ilocs_min = argrelextrema(_df[column].values, np.less_equal, order=period)[0]
+    ilocs_max = argrelextrema(_df[column].values, np.greater_equal, order=period)[0]
 
-    df['MAX'] = 0
-    df['MIN'] = 0
-    df['MID'] = 1
-    df.loc[df.iloc[ilocs_min].index, 'MAX'] = 1
-    df.loc[df.iloc[ilocs_max].index, 'MIN'] = 1
-    df.loc[df.iloc[ilocs_min].index, 'MID'] = 0
-    df.loc[df.iloc[ilocs_max].index, 'MID'] = 0
+    _df['MAX'] = 0
+    _df['MIN'] = 0
+    _df['MID'] = 1
+    _df.loc[_df.iloc[ilocs_min].index, 'MAX'] = 1
+    _df.loc[_df.iloc[ilocs_max].index, 'MIN'] = 1
+    _df.loc[_df.iloc[ilocs_min].index, 'MID'] = 0
+    _df.loc[_df.iloc[ilocs_max].index, 'MID'] = 0
     
-    return df[['MAX', 'MIN', 'MID']]
+    return _df[['MAX', 'MIN', 'MID']]
