@@ -25,16 +25,17 @@ class LabelService(object):
             with pd.HDFStore(data_raw) as raw_store:
                 # print(raw_store['data'])
                 df = pd.read_hdf(raw_store, key='data')
+                peaks = indicators.Extremum(df)
                 sma3 = indicators.SMA(df,period=3)
                 sma30 = indicators.SMA(df,period=30)
-                rsi3 = indicators.RSI(df,period=3)
-                rsi30 = indicators.RSI(df,period=30)
-                df = df.join(
+                # rsi3 = indicators.RSI(df,period=3)
+                # rsi30 = indicators.RSI(df,period=30)
+                df = df.join([
                     sma3.to_frame('SMA3'),
                     sma30.to_frame('SMA30'),
-                    rsi3.to_frame('RSI3'),
-                    rsi30.to_frame('RSI30')
-                    )
+                    # rsi3.to_frame('RSI3'),
+                    # rsi30.to_frame('RSI30')
+                    ])
                 print(df)
         except Exception as e:
             print("An error occurred in UPDATE LABEL ({0})".format(e))
