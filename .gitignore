@@ -5,4 +5,5 @@ __pycache__
 *.h5
 log.txt
 settings.json
+watch_list.json
 .ipynb_checkpoints
