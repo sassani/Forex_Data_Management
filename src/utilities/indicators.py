@@ -2,26 +2,35 @@ import pandas as pd
 import numpy as np
 from scipy.signal import argrelextrema
 
-def SMA(df, column="close", period=20):
+def SMA(df, column=None, period=20):
 
     # sma = df[column].rolling(window=period).mean()
-    return df[column].rolling(window=period).mean()
+    if column is not None:
+        return df[column].rolling(window=period).mean()
+    else:
+        return df.rolling(window=period).mean()
     # return df.join(sma.to_frame('SMA{0}'.format(str(period))))
 
 
 
-def EMA(df, column="close", period=20):
+def EMA(df, column=None, period=20):
 
     # ema = df[column].ewm(span=period).mean()
-    return df[column].ewm(span=period).mean()
+    if column is not None:
+        return df[column].ewm(span=period).mean()
+    else:
+        return df.ewm(span=period).mean()
     # return df.join(ema.to_frame('EMA{0}'.format(str(period))))
 
 
 
-def RSI(df, column="close", period=14):
+def RSI(df, column=None, period=14):
     # wilder's RSI
- 
-    delta = df[column].diff()
+    if column is not None:
+        delta = df[column].diff()
+    else:
+        delta = df.diff()
+
     up, down = delta.copy(), delta.copy()
 
     up[up < 0] = 0
@@ -37,10 +46,15 @@ def RSI(df, column="close", period=14):
 
 
 
-def BollingerBand(df, column="close", period=20):
+def BollingerBand(df, column=None, period=20):
 
-    sma = df[column].rolling(window=period).mean()
-    std = df[column].rolling(window=period).std()
+    if column is not None:
+        sma = df[column].rolling(window=period).mean()
+        std = df[column].rolling(window=period).std()
+    else:
+        sma = df.rolling(window=period).mean()
+        std = df.rolling(window=period).std()
+
 
     upper = (sma + (std * 2)).to_frame('BBANDUP{0}'.format(str(period)))
     lower = (sma - (std * 2)).to_frame('BBANDLO{0}'.format(str(period)))
